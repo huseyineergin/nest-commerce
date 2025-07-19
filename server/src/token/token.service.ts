@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
+import { TokenPayload } from "src/common/types/tokenPayload";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -24,7 +25,7 @@ export class TokenService {
   }
 
   async generateTokens(userId: string): Promise<{ accessToken: string; refreshToken: string }> {
-    const payload = { sub: userId };
+    const payload: TokenPayload = { sub: userId };
 
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {

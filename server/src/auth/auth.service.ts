@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import { TokenPayload } from "src/common/types/tokenPayload";
 import { TokenService } from "src/token/token.service";
 import { UserService } from "src/user/user.service";
 import { SignInDto } from "./dto/signIn.dto";
@@ -82,7 +83,7 @@ export class AuthService {
 
     if (!refreshToken) throw new UnauthorizedException("Invalid refresh token.");
 
-    const decoded: { sub: string } = this.jwtService.verify(refreshToken, {
+    const decoded: TokenPayload = this.jwtService.verify(refreshToken, {
       secret: this.refreshTokenSecret,
     });
 
@@ -105,7 +106,7 @@ export class AuthService {
 
     if (!refreshToken) throw new UnauthorizedException("Invalid refresh token.");
 
-    const decoded: { sub: string } = this.jwtService.verify(refreshToken, {
+    const decoded: TokenPayload = this.jwtService.verify(refreshToken, {
       secret: this.refreshTokenSecret,
     });
 
