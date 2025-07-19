@@ -29,13 +29,14 @@ export class AuthService {
   async signUp(dto: SignUpDto, res: Response) {
     const { email, username, password } = dto;
 
-    const existingUser = await this.userService.findByEmail(email);
+    const [userByEmail, userByUsername] = await Promise.all([
+      this.userService.findByEmail(email),
+      this.userService.findByUsername(username),
+    ]);
 
-    if (existingUser) {
-      if (existingUser.email === email) throw new ConflictException("Email is already in use.");
+    if (userByEmail) throw new ConflictException("Email is already in use.");
 
-      if (existingUser.username === username) throw new ConflictException("Username is already in use.");
-    }
+    if (userByUsername) throw new ConflictException("Username is already in use.");
 
     const createdUser = await this.userService.create({
       email,
